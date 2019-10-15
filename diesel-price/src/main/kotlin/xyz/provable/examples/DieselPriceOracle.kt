@@ -64,6 +64,6 @@ class DieselPriceOracle : FlowLogic<SignedTransaction>() {
 
         progressTracker.currentStep = FINALIZING_TRANSACTION
 
-        return subFlow(FinalityFlow(fullSigned))
+        return fullSigned
     }
 }

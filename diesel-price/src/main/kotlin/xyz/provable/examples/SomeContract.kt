@@ -11,10 +11,8 @@ class SomeContract : Contract {
     }
 
     override fun verify(tx: LedgerTransaction)  = requireThat {
-        val state = tx.outputsOfType<SomeState>().single()
         val answ = tx.commandsOfType<Answer>().single().value
 
-        "The amount should be positive" using (state.amount > 0)
         "The answer is not empty" using (!answ.isEmpty())
     }
 }
