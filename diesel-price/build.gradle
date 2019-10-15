@@ -23,11 +23,40 @@ cordapp {
         licence "MIT"
         versionId 1
     }
-    signing.enabled false
+
+    // Save the signing properties provable_signer_pass into the signing.properties file
+    // located a project root
+    Properties signingProperties = new Properties()
+    try {
+        file(rootProject.file("./signing.properties")).withInputStream {
+            signingProperties.load(it)
+        }
+    } catch(ignored) {
+        println "signing.properties file not found"
+    }
+
+    if (signingProperties.example_passw != null) {
+        signing {
+            options {
+                alias "provable-signer"
+                storepass signingProperties.example_passw
+                keypass signingProperties.example_passw
+                keystore rootProject.file(signingProperties.example_keystore).toString()
+                storetype "PKCS12"
+            }
+        }
+    } else {
+        println "Signing with default keystore"
+        signing {
+            options {
+                enabled false
+            }
+        }
+    }
 }
 
 dependencies {
-    compile "com.github.provable-things:corda-api:linux_x86_64-SNAPSHOT"
+    cordaCompile "com.github.provable-things:corda-api:linux_x86_64-SNAPSHOT"
     cordaCompile "$corda_release_group:corda-core:$corda_release_version"
 }
 
